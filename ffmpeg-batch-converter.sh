@@ -6,7 +6,10 @@
 # Version: 2020.01.28
 
 # TODO
+# - 目的文件夹的路径为空，则默认使用源文件夹的路径
 # - 支持使用 ffmpeg 的参数
+# - 检查是否安装了 ffmpeg
+# - 自动安装 ffmpeg
 
 clear
 
@@ -21,10 +24,11 @@ cur_interpreter=${cur_interpreter##*/}
 )
 
 echo '===== FFMPEG 批量转换媒体文件 ==='
-read -p "请输入源文件所在目录的路径：" src_dir
-[ -z "$src_dir" ] && (
+
+read -p "请输入源（待转换）文件夹路径：" src_dir
+if [ -z "$src_dir" ]; then
   exit 0
-)
+fi
 
 if [ ! -d $src_dir ]; then
   echo "路径不存在: $src_dir"
@@ -33,15 +37,16 @@ fi
 
 cd $src_dir
 
-read -p "请输入转换后文件存储目录的路径：" dest_dir
+read -p "请输入目的（转换后）文件夹的路径：" dest_dir
+if [ -z "$dest_dir" ]; then
+  exit 0
+fi
+
 if [ ! -d $dest_dir ]; then
   echo "路径不存在: $dest_dir"
   exit 1
 fi
 
-if [ -z "$dest_dir" ]; then
-  exit 0
-fi
 
 read -p "请输入源文件格式(例如：.avi):" src_type
 [ -z "$src_type" ] && (
