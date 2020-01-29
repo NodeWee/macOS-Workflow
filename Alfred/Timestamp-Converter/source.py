@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
+
 '''
 Alfred Workflow - Timestamp Converter
 Project: https://github.com/NodeWee/macOS-Workflow/Alfred/Timestamp-Converter
 Version: 2020.01.29
 
 Author: NodeWee (https://nodewee.github.io)
+
+Environment: Python 2
 '''
 
-'''
-时间戳与格式化时间之间的互相转换
-举例：2020/1/29 <--> 1580227200
-'''
 
 import time
 
 query = u'{query}'.strip()
+
 
 def timeStringToTimestamp(time_string):
     # 统一格式
@@ -57,17 +57,23 @@ def timestampToTimeString(timeStamp):
     return True, time_str
 
 
+
 if query.isdigit():
     success, content = timestampToTimeString(query)
 else:
     success, content = timeStringToTimestamp(query)
+
+today = ''
 if success:
     result = str(content)
     subtitle = u'Enter 复制到剪贴板'
 else:
-    result = u''
+    cur_time = time.time()
+    result = str(int(cur_time))
+    # today = u' (当前时间' + time.strftime(u'%Y-%m-%d %X', time.localtime(cur_time)) + u')'
     subtitle = u'格式举例：1546272000 或 2019/1/1 或 2019-1-1 或 2019/1/1 10:12:50'
 
 print('<?xml version="1.0"?><items><item uid="desktop" arg="' + result +
-      '" valid="yes"><title>' + result + '</title><subtitle>' + subtitle +
+      '" valid="yes"><title>' + result + today + '</title><subtitle>' + subtitle +
       '</subtitle><icon>icon.png</icon></item></items>')
+
